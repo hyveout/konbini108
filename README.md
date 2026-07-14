@@ -34,7 +34,29 @@ python3 -m http.server 8000
 
 Or drop it in any static host (GitHub Pages, Vercel, Netlify).
 
-## Deploying to GitHub Pages
+## Deploying to Vercel (recommended — needed for newsletter)
+
+1. Push the folder to a GitHub repo.
+2. In Vercel: **New Project → Import** the repo.
+3. **Set environment variables** (required for the mailing-list form to work):
+   - Go to **Project → Settings → Environment Variables**
+   - Add:
+     - `MAILCHIMP_API_KEY` = your Mailchimp API key (format: `xxxx-us14`)
+     - `MAILCHIMP_AUDIENCE_ID` = your Mailchimp audience ID (e.g. `9318507adb`)
+   - Apply to **Production**, **Preview**, and **Development**.
+4. **Redeploy** after adding env vars so they take effect.
+5. Live at `https://<your-project>.vercel.app/Konbini%20108.html`.
+
+### How the newsletter signup works
+
+- The form on the receipt page POSTs to `/api/subscribe`.
+- That's a Vercel serverless function (`api/subscribe.js`) that calls Mailchimp with the API key server-side — the key is **never** exposed to the browser.
+- Subscribers use **double opt-in** (Mailchimp sends a confirmation email). To switch to single opt-in, change `status: 'pending'` → `status: 'subscribed'` in `api/subscribe.js`.
+- Each subscriber is tagged with `matched:<member>` (e.g. `matched:mizuki`) and `source:konbini108`, plus a `MATCHED` merge field — Avex can segment the audience by which member each fan matched with.
+
+## Deploying to GitHub Pages (fallback — no newsletter)
+
+GitHub Pages doesn't support serverless functions, so the newsletter won't work here.
 
 1. Push the whole folder to a GitHub repo.
 2. Settings → Pages → deploy from `main` / root.
