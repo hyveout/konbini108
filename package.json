@@ -1,0 +1,9 @@
+{
+  "name": "konbini-108",
+  "version": "1.0.0",
+  "description": "Konbini 108 — One Or Eight fan matching microsite",
+  "private": true,
+  "engines": {
+    "node": ">=18"
+  }
+}
